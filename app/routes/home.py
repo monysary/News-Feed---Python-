@@ -4,17 +4,25 @@ from app.db import get_db
 
 bp = Blueprint('home', __name__, url_prefix='/')
 
+
 @bp.route('/')
 def index():
-  db = get_db()
-  posts = db.query(Post).order_by(Post.created_at.desc()).all()
+    db = get_db()
+    posts = db.query(Post).order_by(Post.created_at.desc()).all()
 
-  return render_template('homepage.html', posts=posts)
+    return render_template('homepage.html', posts=posts)
+
 
 @bp.route('/login')
 def login():
-  return render_template('login.html')
+    return render_template('login.html')
+
 
 @bp.route('/post/<id>')
 def single(id):
-  return render_template('single-post.html')
+    # get single post by id
+    db = get_db()
+    post = db.query(Post).filter(Post.id == id).one()
+
+    # render single post template
+    return render_template('single-post.html', post=post)
